@@ -93,10 +93,10 @@ export default function ProductDetails() {
   };
 
   return (
-    <main className="mx-auto max-w-6xl px-6 py-8">
+    <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
       {/* categories row (optional) */}
-      <div className="flex flex-wrap md:flex-nowrap items-center gap-3 border-l-4 border-zinc-300 pl-4 sm:pl-6">
-        <div className="flex flex-wrap sm:flex-nowrap gap-3 overflow-x-auto scrollbar-hide">
+      <div className="flex flex-wrap justify-start items-center gap-3 border-l-4 border-zinc-300 pl-4 sm:pl-6">
+        <div className="flex flex-wrap gap-3 overflow-x-auto scrollbar-hide">
           {ALL_CATEGORIES?.map((c) => (
             <span
               key={c}
@@ -108,20 +108,23 @@ export default function ProductDetails() {
             </span>
           ))}
         </div>
-
-        
       </div>
-
+      
+      <h1 className="mt-6 text-2xl font-extrabold tracking-tight sm:text-3xl md:text-[28px]">
+        {product.name}
+      </h1>
+      
       {/* top section: thumbs | main image | info+price */}
-      <div className="mt-8 grid grid-cols-1 gap-8 md:grid-cols-[110px_minmax(0,1fr)_380px]">
-        {/* thumbs */}
-        <div>
-          <div className="flex gap-4 md:flex-col">
+      <div className="mt-8 flex flex-col lg:flex-row gap-8">
+        {/* LEFT: thumbs + main image */}
+        <div className="flex flex-col md:flex-row gap-6 w-full lg:w-1/2">
+          {/* Thumbnails - horizontal on mobile, vertical on md+ */}
+          <div className="flex gap-4 md:flex-col order-2 md:order-1">
             {gallery.map((img, idx) => (
               <button
                 key={img.id || idx}
                 onClick={() => setCurrentImgIdx(idx)}
-                className={`h-24 w-24 shrink-0 rounded-2xl border transition ${
+                className={`h-16 w-16 sm:h-20 sm:w-20 md:h-24 md:w-24 shrink-0 rounded-2xl border transition ${
                   currentImgIdx === idx
                     ? "border-black ring-2 ring-black"
                     : "border-zinc-300 hover:border-zinc-400"
@@ -135,34 +138,28 @@ export default function ProductDetails() {
               </button>
             ))}
           </div>
-        </div>
 
-        {/* main image + title */}
-        <div className="grid items-start">
-          <div>
-            <h1 className="mb-4 text-2xl font-extrabold tracking-tight md:text-[28px]">
-              {product.name}
-            </h1>
+          {/* Main image */}
+          <div className="flex items-center justify-center order-1 md:order-2 flex-1">
             <img
               src={gallery[currentImgIdx]?.src}
               alt={product.name}
-              className="max-h-[260px] w-auto object-contain"
+              className="max-h-[320px] w-auto object-contain"
             />
           </div>
         </div>
-
-        {/* right column: info + price card */}
-        <div className="space-y-5">
-          {/* meta block (no ID displayed) */}
-          <div className="space-y-3 text-sm">
+        
+        {/* RIGHT: info + price card */}
+        <div className="w-full lg:w-1/2 flex flex-col md:flex-row gap-6">
+          <div className="space-y-3 text-sm w-full md:w-1/2">
             {product.brand && (
               <p>
-                <span className="font-semibold">Brand :</span> {product.brand}
+                <span className="font-semibold">Brand:</span> {product.brand}
               </p>
             )}
             {product.size && (
               <p>
-                <span className="font-semibold">Size :</span> {product.size}
+                <span className="font-semibold">Size:</span> {product.size}
               </p>
             )}
             {product.description && (
@@ -178,36 +175,41 @@ export default function ProductDetails() {
               </ul>
             )}
           </div>
+          
+          {/* price card - full width on mobile, half on md+ */}
+          <div className="w-full md:w-1/2">
+            <div className="rounded-2xl border-2 border-zinc-300 p-5 sticky top-4">
+              <div className="text-2xl sm:text-3xl font-extrabold tracking-tight">
+                {money(unit)}
+              </div>
+              <div className="mt-2 text-sm">Free Delivery</div>
 
-          <div className="rounded-2xl border-2 border-zinc-300 p-5">
-            <div className="text-3xl font-extrabold tracking-tight">
-              {money(unit)}
+              <button
+                onClick={addToCart}
+                className="mt-4 flex w-full items-center justify-center gap-2 rounded-md bg-orange-300 px-4 py-2 font-medium text-black hover:opacity-90"
+              >
+                <FiShoppingCart /> Add To Cart
+              </button>
+
+              <button
+                onClick={buyNow}
+                className="mt-3 w-full rounded-md border-2 border-orange-300 px-4 py-2 font-semibold hover:bg-orange-50"
+              >
+                Buy Now
+              </button>
             </div>
-            <div className="mt-2 text-sm">Free Delivery</div>
-
-            <button
-              onClick={addToCart}
-              className="mt-4 flex w-full items-center justify-center gap-2 rounded-md bg-orange-300 px-4 py-2 font-medium text-black hover:opacity-90"
-            >
-              <FiShoppingCart /> Add To Cart
-            </button>
-
-            <button
-              onClick={buyNow}
-              className="mt-3 w-full rounded-md border-2 border-orange-300 px-4 py-2 font-semibold hover:bg-orange-50"
-            >
-              Buy
-            </button>
           </div>
         </div>
       </div>
 
       {/* divider */}
       <div className="my-8 h-[2px] w-full bg-gradient-to-r from-orange-300 to-orange-300/30" />
+      
       {/* More of our products (same category preferred) */}
       <section className="mt-12">
-        <h3 className="mb-6 text-2xl font-bold">More of Our Products</h3>
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-4">
+        <h3 className="mb-6 text-xl sm:text-2xl font-bold">More of Our Products</h3>
+        
+        <div className="grid gap-4 sm:gap-6 grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {ALL_PRODUCTS.filter(
             (p) => p.id !== product.id && p.category === product.category
           )
@@ -219,16 +221,16 @@ export default function ProductDetails() {
                 state={{ product: p }}
                 className="rounded-2xl overflow-hidden border hover:shadow-lg transition"
               >
-                <div className="bg-white flex items-center justify-center p-6">
+                <div className="bg-white flex items-center justify-center p-4 sm:p-6 aspect-square">
                   <img
                     src={p.image}
                     alt={p.name}
-                    className="h-40 object-contain"
+                    className="h-full max-h-40 w-full object-contain"
                   />
                 </div>
-                <div className="bg-orange-400 text-black p-4">
-                  <p className="font-bold text-lg">{p.price}</p>
-                  <p className="text-sm leading-snug">{p.name}</p>
+                <div className="bg-orange-400 text-black p-3 sm:p-4">
+                  <p className="font-bold text-sm sm:text-lg">{p.price}</p>
+                  <p className="text-xs sm:text-sm leading-snug line-clamp-2">{p.name}</p>
                 </div>
               </Link>
             ))}
